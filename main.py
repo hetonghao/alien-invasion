@@ -4,6 +4,8 @@
 @description  
 """
 import pygame
+from pygame.sprite import Group
+
 import game_functions as gf
 from settings import Settings
 from model.ship import Ship
@@ -16,6 +18,7 @@ screen = pygame.display.set_mode((settings.screen_width, settings.screen_height)
 screen_rect = screen.get_rect()
 ship = Ship(screen)
 alien = Alien(screen)
+bullets = Group()
 while True:
-    gf.check_events(ship)
-    gf.update_screen(settings, ship, alien)
+    gf.check_events(ship, bullets)
+    gf.update_screen(settings, bullets, ship, alien)

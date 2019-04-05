@@ -3,6 +3,7 @@
 @date 2019/4/4 20:28
 @description  
 """
+import pygame
 
 
 class Object:
@@ -10,7 +11,7 @@ class Object:
     def __init__(self, screen, moving_speed=0):
         self.ship_img = None
         self.screen = screen
-        self.rect = None
+        self.rect = pygame.Rect(0, 0, 0, 0)
         self.screen_rect = screen.get_rect()
         # 移动状态初始化
         self.moving_right = False
