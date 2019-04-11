@@ -12,7 +12,12 @@ from model.alien import Alien
 
 
 def check_events(ship, bullets):
-    """响应按键和鼠标事件"""
+    """
+    响应按键和鼠标事件
+    :param ship: 飞船
+    :param bullets: 子弹组
+    :return:
+    """
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -23,6 +28,13 @@ def check_events(ship, bullets):
 
 
 def check_key_down_events(event, ship, bullets):
+    """
+    检查按键按下时间
+    :param event: 事件
+    :param ship: 飞船
+    :param bullets: 子弹组
+    :return:
+    """
     if event.key == pygame.K_UP:
         ship.moving_up = True
     elif event.key == pygame.K_DOWN:
@@ -32,12 +44,18 @@ def check_key_down_events(event, ship, bullets):
     elif event.key == pygame.K_RIGHT:
         ship.moving_right = True
     elif event.key == pygame.K_SPACE:
-        bullets.add(Bullet(ship))
+        bullets.firing = True
     elif event.key == pygame.K_q:
         sys.exit()
 
 
 def check_key_up_events(event, ship):
+    """
+    检查按键抬起时间
+    :param event: 事件
+    :param ship: 飞船
+    :return:
+    """
     if event.key == pygame.K_UP:
         ship.moving_up = False
     elif event.key == pygame.K_DOWN:
@@ -49,6 +67,13 @@ def check_key_up_events(event, ship):
 
 
 def create_fleet(settings, screen, aliens):
+    """
+    创建外星人列表
+    :param settings: 设置
+    :param screen: 屏幕
+    :param aliens: 外星人组
+    :return:
+    """
     alien = Alien(screen)
     span = 10
     row_alien_number = int(settings.screen_width / (alien.rect.width + span * 2))
@@ -70,24 +95,63 @@ def update_screen(screen, settings, ship, bullets, aliens):
     :param aliens: 外星人组
     :return:
     """
-    screen.fill(settings.bg_color)  # 重新布置背景
+    # 重新布置背景
+    screen.fill(settings.bg_color)
     # 飞船
+    update_ship(ship)
+    # 子弹
+    update_bullets(bullets, ship)
+    # 外星人
+    update_aliens(aliens, bullets, ship, screen, settings)
+    # 应用最近生效的窗口变化
+    pygame.display.flip()
+
+
+def update_ship(ship):
+    """
+    更新飞船
+    :param ship: 飞船
+    :return:
+    """
     ship.update()
     ship.blitme()
-    # 子弹
+
+
+def update_bullets(bullets, ship):
+    """
+    更新子弹组
+    :param bullets: 子弹组
+    :return:
+    """
+    if bullets.firing:
+        bullets.add(Bullet(ship))
     bullets.update()
     for bullet in bullets.copy():
         if bullet.rect.y < 0:
             bullets.remove(bullet)
     for bullet in bullets:
         bullet.draw_bullet()
-    # 外星人
+
+
+def update_aliens(aliens, bullets, ship, screen, settings):
+    """
+    更新外星人组
+    :param aliens: 外星人组
+    :param bullets: 子弹组
+    :param ship: 飞船
+    :param screen: 屏幕
+    :param settings: 全局设置
+    :return:
+    """
     aliens.update()
     for alien in aliens:
         alien.blitme()
-    pygame.sprite.groupcollide(aliens, bullets, True, False)
+    pygame.sprite.groupcollide(aliens, bullets, True, True)
     if len(aliens) == 0:
         create_fleet(settings, screen, aliens)
-    pygame.sprite.spritecollide(ship, aliens, True, False)
-    # 应用最近生效的窗口变化
-    pygame.display.flip()
+    if pygame.sprite.spritecollideany(ship, aliens):
+        for bullet in bullets.copy():
+            bullets.remove(bullet)
+        for alien in aliens.copy():
+            aliens.remove(alien)
+        ship.__init__(screen)

@@ -1,4 +1,5 @@
 """
+游戏可移动对象基类
 @author HeTongHao
 @date 2019/4/4 20:28
 @description  
@@ -9,7 +10,7 @@ import pygame
 class Object:
 
     def __init__(self, screen, moving_speed=0):
-        self.ship_img = None
+        self.img = None
         self.screen = screen
         self.rect = pygame.Rect(0, 0, 0, 0)
         self.screen_rect = screen.get_rect()
@@ -31,4 +32,4 @@ class Object:
             self.rect.centerx += self.moving_speed
 
     def blitme(self):
-        self.screen.blit(self.ship_img, self.rect)
+        self.screen.blit(self.img, self.rect)

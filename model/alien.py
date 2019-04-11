@@ -1,4 +1,5 @@
 """
+外星人
 @author HeTongHao
 @date 2019/4/4 18:51
 @description  
@@ -14,8 +15,8 @@ class Alien(Object, Sprite):
     def __init__(self, screen, moving_speed=2):
         super().__init__(screen, moving_speed)
         super(Object, self).__init__()
-        self.ship_img = pygame.image.load('images/juanfu.jpg')
-        self.rect = self.ship_img.get_rect()
+        self.img = pygame.image.load('images/juanfu.jpg')
+        self.rect = self.img.get_rect()
         self.rect.centerx = self.rect.width
         self.moving_right = True
         self.moving_down = True

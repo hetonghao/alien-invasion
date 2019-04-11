@@ -17,6 +17,7 @@ screen = pygame.display.set_mode((settings.screen_width, settings.screen_height)
 screen_rect = screen.get_rect()
 ship = Ship(screen)
 bullets = Group()
+bullets.firing = False
 aliens = Group()
 while True:
     # 检查事件
