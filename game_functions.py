@@ -24,7 +24,7 @@ def check_events(ship, bullets):
         elif event.type == pygame.KEYDOWN:
             check_key_down_events(event, ship, bullets)
         elif event.type == pygame.KEYUP:
-            check_key_up_events(event, ship)
+            check_key_up_events(event, ship, bullets)
 
 
 def check_key_down_events(event, ship, bullets):
@@ -49,7 +49,7 @@ def check_key_down_events(event, ship, bullets):
         sys.exit()
 
 
-def check_key_up_events(event, ship):
+def check_key_up_events(event, ship, bullets):
     """
     检查按键抬起时间
     :param event: 事件
@@ -64,6 +64,8 @@ def check_key_up_events(event, ship):
         ship.moving_left = False
     elif event.key == pygame.K_RIGHT:
         ship.moving_right = False
+    elif event.key == pygame.K_SPACE:
+        bullets.firing = False
 
 
 def create_fleet(settings, screen, aliens):
@@ -123,7 +125,8 @@ def update_bullets(bullets, ship):
     :param bullets: 子弹组
     :return:
     """
-    if bullets.firing:
+    # 有开火属性并且正在开火，生成子弹
+    if hasattr(bullets, 'firing') and bullets.firing:
         bullets.add(Bullet(ship))
     bullets.update()
     for bullet in bullets.copy():
