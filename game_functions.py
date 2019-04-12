@@ -1,14 +1,16 @@
 """
+游戏方法
 @author HeTongHao
 @date 2019/4/4 19:15
-@description  游戏方法
+@description
 """
 
 import sys
+
 import pygame
 
-from model.bullet import Bullet
 from model.alien import Alien
+from model.bullet import Bullet
 
 
 def check_events(ship, bullets):
@@ -54,6 +56,7 @@ def check_key_up_events(event, ship, bullets):
     检查按键抬起时间
     :param event: 事件
     :param ship: 飞船
+    :param bullets: 子弹组
     :return:
     """
     if event.key == pygame.K_UP:
@@ -104,7 +107,7 @@ def update_screen(screen, settings, ship, bullets, aliens):
     # 子弹
     update_bullets(bullets, ship)
     # 外星人
-    update_aliens(aliens, bullets, ship, screen, settings)
+    update_aliens(aliens, bullets, screen, settings)
     # 应用最近生效的窗口变化
     pygame.display.flip()
 
@@ -116,13 +119,14 @@ def update_ship(ship):
     :return:
     """
     ship.update()
-    ship.blitme()
+    ship.blit()
 
 
 def update_bullets(bullets, ship):
     """
     更新子弹组
     :param bullets: 子弹组
+    :param ship: 飞船
     :return:
     """
     # 有开火属性并且正在开火，生成子弹
@@ -136,25 +140,44 @@ def update_bullets(bullets, ship):
         bullet.draw_bullet()
 
 
-def update_aliens(aliens, bullets, ship, screen, settings):
+def update_aliens(aliens, bullets, screen, settings):
     """
     更新外星人组
     :param aliens: 外星人组
     :param bullets: 子弹组
-    :param ship: 飞船
     :param screen: 屏幕
     :param settings: 全局设置
     :return:
     """
     aliens.update()
     for alien in aliens:
-        alien.blitme()
+        alien.blit()
     pygame.sprite.groupcollide(aliens, bullets, True, True)
     if len(aliens) == 0:
         create_fleet(settings, screen, aliens)
+
+
+def check_collision(ship, aliens, bullets):
+    """
+    飞船与外星人发生碰撞
+    :param ship: 飞船
+    :param aliens: 外星人组
+    :param bullets: 子弹组
+    :return: 是否碰撞
+    """
     if pygame.sprite.spritecollideany(ship, aliens):
-        for bullet in bullets.copy():
-            bullets.remove(bullet)
-        for alien in aliens.copy():
-            aliens.remove(alien)
-        ship.__init__(screen)
+        ship_crash(ship, aliens, bullets)
+        return True
+
+
+def ship_crash(ship, aliens, bullets):
+    """
+    飞船坠毁
+    :param ship: 飞船
+    :param aliens: 外星人组
+    :param bullets: 子弹组
+    :return:
+    """
+    bullets.empty()
+    aliens.empty()
+    ship.init_position()

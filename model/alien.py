@@ -5,23 +5,22 @@
 @description  
 """
 
-import pygame
-from .object import Object
-from pygame.sprite import Sprite
+from model.base.sprite_object import SpriteObject
 
 
-class Alien(Object, Sprite):
+class Alien(SpriteObject):
 
     def __init__(self, screen, moving_speed=2):
-        super().__init__(screen, moving_speed)
-        super(Object, self).__init__()
-        self.img = pygame.image.load('images/juanfu.jpg')
-        self.rect = self.img.get_rect()
+        super().__init__(screen, 'images/juan_fu.jpg', moving_speed)
         self.rect.centerx = self.rect.width
         self.moving_right = True
         self.moving_down = True
 
     def update(self):
+        """
+        更新位置
+        :return:
+        """
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.rect.centerx += self.moving_speed * 2
             if self.screen_rect.right - self.rect.right <= self.moving_speed * 2:

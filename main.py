@@ -4,12 +4,14 @@
 @date 2019/4/4 09:53
 @description  
 """
+from time import sleep
+
 import pygame
 from pygame.sprite import Group
 
 import game_functions as gf
-from settings import Settings
 from model.ship import Ship
+from settings import Settings
 
 if __name__ == '__main__':
     pygame.init()
@@ -27,7 +29,11 @@ if __name__ == '__main__':
     aliens = Group()
     # 游戏主循环
     while True:
-        # 检查事件
-        gf.check_events(ship, bullets)
+        # 检查飞船碰撞
+        is_crash = gf.check_collision(ship, aliens, bullets)
         # 更新屏幕
         gf.update_screen(screen, settings, ship, bullets, aliens)
+        # 检查事件
+        gf.check_events(ship, bullets)
+        if is_crash:
+            sleep(0.5)

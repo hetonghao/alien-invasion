@@ -5,16 +5,19 @@
 @description  
 """
 
-import pygame
-from .object import Object
+from model.base.object import Object
 
 
 class Ship(Object):
 
     def __init__(self, screen, moving_speed=5):
-        super().__init__(screen, moving_speed)
-        super(Object, self).__init__()
-        self.img = pygame.image.load('images/ship.jpg')
-        self.rect = self.img.get_rect()
+        super().__init__(screen, 'images/ship.jpg', moving_speed)
+        self.init_position()
+
+    def init_position(self):
+        """
+        初始化飞船位置
+        :return:
+        """
         self.rect.centerx = self.screen_rect.centerx
         self.rect.bottom = self.screen_rect.bottom
